@@ -1,0 +1,76 @@
+package com.example.hikingtrails
+
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+
+@Composable
+fun TrailList(
+    modifier: Modifier = Modifier
+) {
+    Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+        Grid()
+    }
+}
+
+@Composable
+fun Grid() {
+
+    val trailList = listOf(
+        "Marshmallow",
+        "Oreo",
+        "Pie",
+        "Android 10",
+        "Android 11"
+    )
+
+    val itemsList = (0..5).toList()
+    val itemsIndexedList = listOf("A", "B", "C")
+
+    //val itemModifier = Modifier.border(1.dp, Color.Blue).height(80.dp).wrapContentSize()
+
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(3),
+        modifier = Modifier.height(100.dp) //tu byl problem jak nie bylo
+    ) {
+        items(trailList) {
+            Card(
+                onClick = {
+                    navHostController.navigate(TrailDetails())
+                },
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                ),
+                modifier = Modifier
+                    .padding(4.dp)
+                    .size(width = 240.dp, height = 200.dp)
+                //.fillMaxSize()
+            ) {
+                Text(
+                    text = it,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 30.sp,
+                    color = Color(0xFFFFFFFF),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+        }
+    }
+}
