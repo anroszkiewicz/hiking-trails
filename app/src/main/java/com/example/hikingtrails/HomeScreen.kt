@@ -6,17 +6,14 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 
 @Composable
-fun TrailDetails(
+fun HomeScreen (
     navController: NavController,
-    modifier: Modifier = Modifier,
-    trails: List<String>,
-    itemIndex: Int?
+    modifier: Modifier = Modifier
 ) {
     Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-        Text(text = trails[itemIndex!!], fontSize = 18.sp)
+        Text("Hiking Trails")
     }
 }

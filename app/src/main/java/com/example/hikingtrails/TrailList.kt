@@ -1,5 +1,6 @@
 package com.example.hikingtrails
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -19,51 +20,52 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 
 @Composable
 fun TrailList(
-    modifier: Modifier = Modifier
-) {
-    Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-        Grid()
-    }
+    navController: NavController,
+    modifier: Modifier = Modifier,
+    trails: List<String>,
+    ) {
+        Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+            Grid(navController, trails)
+        }
 }
 
 @Composable
-fun Grid() {
+fun Grid(navController: NavController, trails: List<String>) {
 
+    /*
     val trailList = listOf(
         "Marshmallow",
         "Oreo",
         "Pie",
         "Android 10",
         "Android 11"
-    )
-
-    val itemsList = (0..5).toList()
-    val itemsIndexedList = listOf("A", "B", "C")
-
-    //val itemModifier = Modifier.border(1.dp, Color.Blue).height(80.dp).wrapContentSize()
+    )*/
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(3),
-        modifier = Modifier.height(100.dp) //tu byl problem jak nie bylo
+        modifier = Modifier.height(100.dp) //necessary so the size is not infinite
     ) {
-        items(trailList) {
+        val itemCount = trails.size
+        items(itemCount) {
+            val itemIndex = it
             Card(
-                onClick = {
-                    navHostController.navigate(TrailDetails())
-                },
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant,
                 ),
                 modifier = Modifier
                     .padding(4.dp)
                     .size(width = 240.dp, height = 200.dp)
+                    .clickable {
+                        navController.navigate(route="TrailDetails/$itemIndex")
+                    }
                 //.fillMaxSize()
             ) {
                 Text(
-                    text = it,
+                    text = trails[it],
                     fontWeight = FontWeight.Bold,
                     fontSize = 30.sp,
                     color = Color(0xFFFFFFFF),
