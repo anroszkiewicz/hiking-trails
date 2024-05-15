@@ -1,5 +1,6 @@
 package com.example.hikingtrails
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -26,7 +27,8 @@ import androidx.navigation.NavController
 fun TrailList(
     navController: NavController,
     modifier: Modifier = Modifier,
-    trails: List<String>,
+    trails: List<Trail>,
+    //trailDao: TrailDao
     ) {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
             Grid(navController, trails)
@@ -34,24 +36,15 @@ fun TrailList(
 }
 
 @Composable
-fun Grid(navController: NavController, trails: List<String>) {
-
-    /*
-    val trailList = listOf(
-        "Marshmallow",
-        "Oreo",
-        "Pie",
-        "Android 10",
-        "Android 11"
-    )*/
+fun Grid(navController: NavController, trails: List<Trail>) {
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(3),
         modifier = Modifier.height(100.dp) //necessary so the size is not infinite
     ) {
-        val itemCount = trails.size
-        items(itemCount) {
-            val itemIndex = it
+        //val itemCount = trails.size
+        items(trails) {
+            val itemIndex = it.id
             Card(
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant,
@@ -64,14 +57,16 @@ fun Grid(navController: NavController, trails: List<String>) {
                     }
                 //.fillMaxSize()
             ) {
-                Text(
-                    text = trails[it],
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 30.sp,
-                    color = Color(0xFFFFFFFF),
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(16.dp)
-                )
+                it.name?.let { it1 ->
+                    Text(
+                        text = it1,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 15.sp,
+                        color = Color(0xFFFFFFFF),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
             }
         }
     }

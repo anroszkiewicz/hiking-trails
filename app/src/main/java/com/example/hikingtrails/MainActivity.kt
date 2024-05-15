@@ -3,6 +3,7 @@ package com.example.hikingtrails
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,9 +33,12 @@ import com.example.hikingtrails.ui.theme.HikingTrailsTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val trailViewModel : TrailViewModel by viewModels {
+            TrailViewModelFactory((application as TrailsApplication).repository)
+        }
         setContent {
             HikingTrailsTheme {
-                TrailApp()
+                TrailApp(trailViewModel = trailViewModel)
             }
         }
     }

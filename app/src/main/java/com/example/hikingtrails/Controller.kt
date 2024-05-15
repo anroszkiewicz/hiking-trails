@@ -1,11 +1,15 @@
 package com.example.hikingtrails
 
+import android.annotation.SuppressLint
+import android.app.Application
+import android.util.Log
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
@@ -23,18 +27,25 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.room.Room
 import kotlinx.coroutines.launch
+import java.security.AccessController.getContext
+import androidx.compose.runtime.livedata.observeAsState
 
 enum class Screen() {
     TrailList,
@@ -75,19 +86,41 @@ fun TrailAppBar(
     )
 }
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun TrailApp(
     navController: NavHostController = rememberNavController(),
-    drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
+    trailViewModel: TrailViewModel
 ) {
     //all data must be initialised here and passed to screens
-    val trails = listOf(
-        "Marshmallow",
-        "Oreo",
-        "Pie",
-        "Android 10",
-        "Android 11"
-    )
+    //val dbHandler = MyDBHandler.getInstance(context = LocalContext.current)
+    //dbHandler.writableDatabase
+    /*
+    val appContext = LocalContext.current
+
+    val db = Room.databaseBuilder(appContext, AppDatabase::class.java, "HikingTrails.db")
+        .createFromAsset("databases/HikingTrailsDatabase.db")
+        .build()
+    */
+    /*val trailDao = db.trailDao()
+    var trails: List<Trail>? = null
+    Log.d("debug", "tworze trails")
+
+    val scope1 = rememberCoroutineScope()
+    scope1.launch() {
+        trails = trailDao.getList()
+        Log.d("debug", "wczytuje do trails")
+        Log.d("rozmiartrailspowczytaniu", trails?.size.toString())
+    }
+    Log.d("rozmiartrailsprzedwczytaniem", trails?.size.toString())*/
+
+    /*val owner = LocalViewModelStoreOwner.current
+    owner?.let {
+
+    }*/
+
+    val trails by trailViewModel.allTrails.observeAsState(listOf())
 
     val scope = rememberCoroutineScope()
     ModalNavigationDrawer(
@@ -97,7 +130,7 @@ fun TrailApp(
                 Text("Hiking Trails", modifier = Modifier.padding(16.dp))
                 Divider()
                 NavigationDrawerItem(
-                    label = { Text(text = "Home") },
+                    label = { Text(text = "Ekran główny") },
                     selected = false,
                     onClick = {
                         navController.navigate(route="HomeScreen")
@@ -109,7 +142,31 @@ fun TrailApp(
                     }
                 )
                 NavigationDrawerItem(
-                    label = { Text(text = "Trail List") },
+                    label = { Text(text = "Zobacz wszystkie szlaki") },
+                    selected = false,
+                    onClick = {
+                        navController.navigate(route="TrailList")
+                        scope.launch {
+                            drawerState.apply {
+                                if (isClosed) open() else close()
+                            }
+                        }
+                    }
+                )
+                NavigationDrawerItem(
+                    label = { Text(text = "Szlaki w Tatrach Zachodnich") },
+                    selected = false,
+                    onClick = {
+                        navController.navigate(route="TrailList")
+                        scope.launch {
+                            drawerState.apply {
+                                if (isClosed) open() else close()
+                            }
+                        }
+                    }
+                )
+                NavigationDrawerItem(
+                    label = { Text(text = "Szlaki w Tatrach Wysokich") },
                     selected = false,
                     onClick = {
                         navController.navigate(route="TrailList")
@@ -137,6 +194,8 @@ fun TrailApp(
             NavHost(
                 navController = navController,
                 startDestination = "HomeScreen",
+                enterTransition = {EnterTransition.None},
+                exitTransition = { ExitTransition.None},
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
@@ -144,13 +203,16 @@ fun TrailApp(
             ) {
                 //route to trail list
                 composable(route = Screen.TrailList.name) {
-                    TrailList(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(dimensionResource(R.dimen.padding_medium)),
-                        navController = navController,
-                        trails = trails
-                    )
+                    trails?.let { it1 ->
+                        TrailList(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(dimensionResource(R.dimen.padding_medium)),
+                            navController = navController,
+                            trails = it1
+                            //trailDao = trailDao
+                        )
+                    }
                 }
                 //route to home screen
                 composable(route = "HomeScreen") {
@@ -169,14 +231,17 @@ fun TrailApp(
                         }
                     )
                 ) {index ->
-                    TrailDetails(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(dimensionResource(R.dimen.padding_medium)),
-                        navController = navController,
-                        itemIndex = index.arguments?.getInt("index"),
-                        trails = trails
-                    )
+                    index.arguments?.getInt("index")?.let {
+                        TrailDetails(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(dimensionResource(R.dimen.padding_medium)),
+                            navController = navController,
+                            index = it
+                            //trailDao = trailDao
+                            //trails = trails
+                        )
+                    }
                 }
             }
         }
