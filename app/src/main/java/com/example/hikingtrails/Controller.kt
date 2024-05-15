@@ -237,7 +237,8 @@ fun TrailApp(
                                 .fillMaxSize()
                                 .padding(dimensionResource(R.dimen.padding_medium)),
                             navController = navController,
-                            index = it
+                            index = it,
+                            viewModel = trailViewModel
                             //trailDao = trailDao
                             //trails = trails
                         )
