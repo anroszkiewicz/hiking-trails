@@ -45,6 +45,8 @@ fun DetailCard(trail: Trail) {
         Text(trail.name, modifier = Modifier.padding(10.dp), fontWeight = FontWeight.Bold)
         Text(trail.type, modifier = Modifier.padding(10.dp))
         trail.description?.let { Text(it, textAlign = TextAlign.Justify) }
+        Text("Etapy:", modifier = Modifier.padding(10.dp))
+        trail.stages?.let { Text(it, modifier = Modifier.padding(10.dp))}
         Text("Trudność: " + trail.difficulty.toString(), modifier = Modifier.padding(10.dp))
         Text("Czas: " + trail.time.toString() + " minut", modifier = Modifier.padding(10.dp))
     }
