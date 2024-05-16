@@ -9,31 +9,6 @@ import androidx.room.Query
 import androidx.room.RoomDatabase
 import kotlinx.coroutines.flow.Flow
 
-/*class Trail {
-    var id: Int = 0
-    var name: String? = null
-    var type: String? = null
-    var stages: String? = null
-    var description: String? = null
-    var time: Int = 0
-    var difficulty: Int = 0
-
-    constructor(id: Int, name: String, type: String, stages: String, description: String, time: Int, difficulty: Int) {
-        this.id = id
-        this.name = name
-        this.type = type
-        this.stages = stages
-        this.description = description
-        this.time = time
-        this.difficulty = difficulty
-    }
-
-    constructor(id: Int, name: String) {
-        this.id = id
-        this.name = name
-    }
-}*/
-
 @Entity(tableName = "Trails")
 data class Trail(
     @PrimaryKey val id: Int,

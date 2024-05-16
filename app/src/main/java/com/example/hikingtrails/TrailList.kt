@@ -15,6 +15,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -27,11 +29,20 @@ import androidx.navigation.NavController
 fun TrailList(
     navController: NavController,
     modifier: Modifier = Modifier,
-    trails: List<Trail>,
-    //trailDao: TrailDao
+    //trails: List<Trail>,
+    viewModel: TrailViewModel,
+    category: String
     ) {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-            Grid(navController, trails)
+            if(category=="all") { //get all trails
+                val trails by viewModel.allTrails.observeAsState(listOf())
+                Grid(navController, trails)
+            }
+            else { //get trails by type
+                //val trails by viewModel.allTrails.observeAsState(listOf())
+                //val trails = viewModel.getTrailsByType(category).observeAsState(listOf())
+                //Grid(navController, trails) //dokonczyc!
+            }
         }
 }
 

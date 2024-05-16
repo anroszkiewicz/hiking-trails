@@ -16,6 +16,7 @@ import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
 
@@ -27,9 +28,7 @@ fun TrailDetails(
     navController: NavController,
     index: Int,
     viewModel: TrailViewModel
-    //trailDao: TrailDao
 ) {
-    //viewModel.getTrail(index)
     Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
         val trail = viewModel.getTrail(index).observeAsState().value
         if (trail != null) {
@@ -45,20 +44,8 @@ fun DetailCard(trail: Trail) {
         .fillMaxWidth()) {
         Text(trail.name, modifier = Modifier.padding(10.dp), fontWeight = FontWeight.Bold)
         Text(trail.type, modifier = Modifier.padding(10.dp))
-        trail.description?.let { Text(it) }
+        trail.description?.let { Text(it, textAlign = TextAlign.Justify) }
         Text("Trudność: " + trail.difficulty.toString(), modifier = Modifier.padding(10.dp))
         Text("Czas: " + trail.time.toString() + " minut", modifier = Modifier.padding(10.dp))
     }
-}
-
-@SuppressLint("CoroutineCreationDuringComposition")
-@Composable
-fun getData(trailDao: TrailDao, index: Int): Trail {
-
-    val scope = rememberCoroutineScope()
-    var trail: Trail? = null
-    scope.launch() {
-        //trail = trailDao.getDetails(index)
-    }
-    return trail!!
 }

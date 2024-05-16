@@ -64,7 +64,7 @@ fun TrailAppBar(
 
     TopAppBar(
 
-        title = { Text("Hiking Trails") },
+        title = { Text("Szlaki turystyczne") },
         colors = TopAppBarDefaults.mediumTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer
         ),
@@ -93,41 +93,12 @@ fun TrailApp(
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
     trailViewModel: TrailViewModel
 ) {
-    //all data must be initialised here and passed to screens
-    //val dbHandler = MyDBHandler.getInstance(context = LocalContext.current)
-    //dbHandler.writableDatabase
-    /*
-    val appContext = LocalContext.current
-
-    val db = Room.databaseBuilder(appContext, AppDatabase::class.java, "HikingTrails.db")
-        .createFromAsset("databases/HikingTrailsDatabase.db")
-        .build()
-    */
-    /*val trailDao = db.trailDao()
-    var trails: List<Trail>? = null
-    Log.d("debug", "tworze trails")
-
-    val scope1 = rememberCoroutineScope()
-    scope1.launch() {
-        trails = trailDao.getList()
-        Log.d("debug", "wczytuje do trails")
-        Log.d("rozmiartrailspowczytaniu", trails?.size.toString())
-    }
-    Log.d("rozmiartrailsprzedwczytaniem", trails?.size.toString())*/
-
-    /*val owner = LocalViewModelStoreOwner.current
-    owner?.let {
-
-    }*/
-
-    val trails by trailViewModel.allTrails.observeAsState(listOf())
-
     val scope = rememberCoroutineScope()
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet {
-                Text("Hiking Trails", modifier = Modifier.padding(16.dp))
+                Text("Szlaki turystyczne", modifier = Modifier.padding(16.dp))
                 Divider()
                 NavigationDrawerItem(
                     label = { Text(text = "Ekran główny") },
@@ -190,7 +161,6 @@ fun TrailApp(
             }
         ) { innerPadding ->
             //val uiState by viewModel.uiState.collectAsState()
-
             NavHost(
                 navController = navController,
                 startDestination = "HomeScreen",
@@ -201,18 +171,15 @@ fun TrailApp(
                     .verticalScroll(rememberScrollState())
                     .padding(innerPadding)
             ) {
-                //route to trail list
+                //route to trail list with no arguments
                 composable(route = Screen.TrailList.name) {
-                    trails?.let { it1 ->
-                        TrailList(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(dimensionResource(R.dimen.padding_medium)),
-                            navController = navController,
-                            trails = it1
-                            //trailDao = trailDao
-                        )
-                    }
+                    TrailList(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(dimensionResource(R.dimen.padding_medium)),
+                        navController = navController,
+                        viewModel = trailViewModel,
+                        category = "all")
                 }
                 //route to home screen
                 composable(route = "HomeScreen") {
