@@ -39,9 +39,8 @@ fun TrailList(
                 Grid(navController, trails)
             }
             else { //get trails by type
-                //val trails by viewModel.allTrails.observeAsState(listOf())
-                //val trails = viewModel.getTrailsByType(category).observeAsState(listOf())
-                //Grid(navController, trails) //dokonczyc!
+                val trails by viewModel.getTrailsByType(category).observeAsState(listOf())
+                Grid(navController, trails)
             }
         }
 }
