@@ -47,11 +47,6 @@ import kotlinx.coroutines.launch
 import java.security.AccessController.getContext
 import androidx.compose.runtime.livedata.observeAsState
 
-enum class Screen() {
-    TrailList,
-    TrailDetails
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TrailAppBar(
@@ -128,7 +123,7 @@ fun TrailApp(
                     label = { Text(text = "Szlaki w Tatrach Zachodnich") },
                     selected = false,
                     onClick = {
-                        navController.navigate(route="TrailList")
+                        navController.navigate(route="TrailList/Tatry Zachodnie")
                         scope.launch {
                             drawerState.apply {
                                 if (isClosed) open() else close()
@@ -140,7 +135,7 @@ fun TrailApp(
                     label = { Text(text = "Szlaki w Tatrach Wysokich") },
                     selected = false,
                     onClick = {
-                        navController.navigate(route="TrailList")
+                        navController.navigate(route="TrailList/Tatry Wysokie")
                         scope.launch {
                             drawerState.apply {
                                 if (isClosed) open() else close()
@@ -172,7 +167,7 @@ fun TrailApp(
                     .padding(innerPadding)
             ) {
                 //route to trail list with no arguments
-                composable(route = Screen.TrailList.name) {
+                composable(route = "TrailList") {
                     TrailList(
                         modifier = Modifier
                             .fillMaxSize()
@@ -180,6 +175,25 @@ fun TrailApp(
                         navController = navController,
                         viewModel = trailViewModel,
                         category = "all")
+                }
+                //route to trail list with category
+                composable(route = "TrailList/{category}",
+                    arguments = listOf(
+                        navArgument(name = "category") {
+                            type = NavType.StringType
+                        }
+                    )
+                ) {category ->
+                    category.arguments?.getString("category")?.let {
+                        TrailList(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(dimensionResource(R.dimen.padding_medium)),
+                            navController = navController,
+                            viewModel = trailViewModel,
+                            category = it
+                        )
+                    }
                 }
                 //route to home screen
                 composable(route = "HomeScreen") {

@@ -12,11 +12,13 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
 class TrailViewModel(private val repository: TrailRepository) : ViewModel() {
-    var trail by mutableStateOf(Trail(0, "", "", null, null, 0, 0))
     val allTrails : LiveData<List<Trail>> = repository.allTrails.asLiveData()
     fun getTrail(id: Int): LiveData<Trail> {
-        val livetrail : LiveData<Trail> = repository.getTrail(id).asLiveData()
-        return livetrail
+        return repository.getTrail(id).asLiveData()
+    }
+
+    fun getTrailsByType(category: String): LiveData<List<Trail>> {
+        return repository.getTrailsByType(category).asLiveData()
     }
 }
 
