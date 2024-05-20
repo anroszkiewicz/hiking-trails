@@ -1,7 +1,9 @@
 package com.example.hikingtrails
 
 import android.util.DisplayMetrics
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,7 +29,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -91,37 +95,51 @@ fun Grid(navController: NavController, trails: List<Trail>, tabIndex: Int) {
     val dpWidth = displayMetrics.widthPixels / displayMetrics.density
 
     Column() {
-    TabScreen(navController, tabIndex)
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(3),
-        modifier = Modifier.height(dpHeight.dp) //necessary so the size is not infinite
-    ) {
-        items(trails) {
-            val itemIndex = it.id
-            Card(
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                ),
-                modifier = Modifier
-                    .padding(4.dp)
-                    .size(width = 240.dp, height = 200.dp)
-                    .clickable {
-                        navController.navigate(route = "TrailDetails/$itemIndex")
+        TabScreen(navController, tabIndex)
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(3),
+            modifier = Modifier.height(dpHeight.dp) //necessary so the size is not infinite
+        ) {
+            items(trails) {
+                val itemIndex = it.id
+                Card(
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    ),
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .size(width = 240.dp, height = 200.dp)
+                        .clickable {
+                            navController.navigate(route = "TrailDetails/$itemIndex")
+                        }
+                    //.fillMaxSize()
+                ) {
+                    Box() {
+                        val imageID: Int = LocalContext.current.resources.getIdentifier("image" + it.id.toString(), "drawable", "com.example.hikingtrails")
+                        val context = LocalContext.current
+                        val drawableId = remember(imageID) {
+                            context.resources.getIdentifier(
+                                "image" + it.id.toString(),
+                                "drawable",
+                                context.packageName
+                            )
+                        }
+                        Image(
+                            painterResource(id = imageID),
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop
+                        )
+                        Text(
+                            text = it.name,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 12.sp,
+                            color = Color(0xFFFF5050),
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(16.dp)
+                        )
                     }
-                //.fillMaxSize()
-            ) {
-                it.name?.let { it1 ->
-                    Text(
-                        text = it1,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 15.sp,
-                        color = Color(0xFFFFFFFF),
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(16.dp)
-                    )
                 }
             }
         }
-    }
     }
 }
