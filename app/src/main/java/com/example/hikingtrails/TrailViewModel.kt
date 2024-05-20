@@ -1,10 +1,12 @@
 package com.example.hikingtrails
 
+import android.os.SystemClock
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
@@ -13,6 +15,9 @@ import kotlinx.coroutines.launch
 
 class TrailViewModel(private val repository: TrailRepository) : ViewModel() {
     val allTrails : LiveData<List<Trail>> = repository.allTrails.asLiveData()
+    val timer : MutableLiveData<Long> by lazy { MutableLiveData<Long>() }
+    val isTimerRunning: MutableLiveData<Boolean> by lazy {MutableLiveData<Boolean>(false)}
+    var startTime: Long = 0
     fun getTrail(id: Int): LiveData<Trail> {
         return repository.getTrail(id).asLiveData()
     }
