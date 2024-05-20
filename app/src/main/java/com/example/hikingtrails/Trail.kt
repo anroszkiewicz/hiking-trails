@@ -36,3 +36,4 @@ interface TrailDao {
 abstract class AppDatabase : RoomDatabase() {
     abstract fun trailDao(): TrailDao
 }
+
