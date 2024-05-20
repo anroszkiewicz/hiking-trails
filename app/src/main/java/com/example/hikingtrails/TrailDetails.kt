@@ -50,7 +50,7 @@ fun TrailDetails(
         }
         val timer = viewModel.timer.observeAsState()
         if (trail != null) {
-                DetailCard(trail, timer, isTimerRunning, viewModel)
+            DetailCard(trail, timer, isTimerRunning, viewModel)
         }
     }
 }
@@ -81,7 +81,7 @@ fun DetailCard(trail: Trail, timer: State<Long?>, isTimerRunning: State<Boolean?
         trail.description?.let { Text(it, textAlign = TextAlign.Justify) }
         Text("Etapy:", modifier = Modifier.padding(10.dp))
         trail.stages?.let { Text(it, modifier = Modifier.padding(10.dp))}
-        Text("Trudność: " + trail.difficulty.toString(), modifier = Modifier.padding(10.dp))
+        Text("Trudność: " + trail.difficulty.toString() + "/5", modifier = Modifier.padding(10.dp))
         Text("Czas: " + trail.time.toString() + " minut", modifier = Modifier.padding(10.dp))
         Text("Upłynęło: ${timer.value?.milliseconds}", modifier = Modifier.padding(10.dp))
         Button(onClick = { toggleTimer(viewModel) }) {

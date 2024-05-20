@@ -127,7 +127,8 @@ fun TrailApp(
                     label = { Text(text = "Zobacz wszystkie szlaki") },
                     selected = false,
                     onClick = {
-                        navController.navigate(route="TrailList")
+                        //navController.navigate(route="TrailList")
+                        navController.navigate(route="ListAndDetails/all")
                         scope.launch {
                             drawerState.apply {
                                 if (isClosed) open() else close()
@@ -139,7 +140,8 @@ fun TrailApp(
                     label = { Text(text = "Szlaki w Tatrach Zachodnich") },
                     selected = false,
                     onClick = {
-                        navController.navigate(route="TrailList/Tatry Zachodnie")
+                        //navController.navigate(route="TrailList/Tatry Zachodnie")
+                        navController.navigate(route="ListAndDetails/Tatry Zachodnie")
                         scope.launch {
                             drawerState.apply {
                                 if (isClosed) open() else close()
@@ -151,7 +153,8 @@ fun TrailApp(
                     label = { Text(text = "Szlaki w Tatrach Wysokich") },
                     selected = false,
                     onClick = {
-                        navController.navigate(route="TrailList/Tatry Wysokie")
+                        //navController.navigate(route="TrailList/Tatry Wysokie")
+                        navController.navigate(route="ListAndDetails/Tatry Wysokie")
                         scope.launch {
                             drawerState.apply {
                                 if (isClosed) open() else close()
@@ -190,35 +193,6 @@ fun TrailApp(
                     .verticalScroll(rememberScrollState())
                     .padding(innerPadding)
             ) {
-                //route to trail list with no arguments
-                composable(route = "TrailList") {
-                    TrailList(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(dimensionResource(R.dimen.padding_medium)),
-                        navController = navController,
-                        viewModel = trailViewModel,
-                        category = "all")
-                }
-                //route to trail list with category
-                composable(route = "TrailList/{category}",
-                    arguments = listOf(
-                        navArgument(name = "category") {
-                            type = NavType.StringType
-                        }
-                    )
-                ) {category ->
-                    category.arguments?.getString("category")?.let {
-                        TrailList(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(dimensionResource(R.dimen.padding_medium)),
-                            navController = navController,
-                            viewModel = trailViewModel,
-                            category = it
-                        )
-                    }
-                }
                 //route to home screen
                 composable(route = "HomeScreen") {
                     HomeScreen(
@@ -228,22 +202,46 @@ fun TrailApp(
                         navController = navController
                     )
                 }
-                //route to details screen with arguments
-                composable(route = "TrailDetails/{index}",
+                //route to list and details
+                composable(route = "ListAndDetails/{category}/{index}",
                     arguments = listOf(
                         navArgument(name = "index") {
                             type = NavType.IntType
+                        },
+                        navArgument(name = "category") {
+                            type = NavType.StringType
                         }
                     )
-                ) {index ->
-                    index.arguments?.getInt("index")?.let {
-                        TrailDetails(
+                ) {
+                    val index = it.arguments?.getInt("index")
+                    val category = it.arguments?.getString("category")
+                    ListAndDetails(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(dimensionResource(R.dimen.padding_medium)),
+                        navController = navController,
+                        index = index,
+                        viewModel = trailViewModel,
+                        category = category
+                    )
+                }
+                //route to list and details with no index
+                composable(route = "ListAndDetails/{category}",
+                    arguments = listOf(
+                        navArgument(name = "category") {
+                            type = NavType.StringType
+                        }
+                    )
+                ) {category ->
+                    category.arguments?.getString("category")?.let {
+                        ListAndDetails(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .padding(dimensionResource(R.dimen.padding_medium)),
                             navController = navController,
-                            index = it,
-                            viewModel = trailViewModel
+                            viewModel = trailViewModel,
+                            category = it,
+                            index = null
                         )
                     }
                 }

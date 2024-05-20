@@ -14,6 +14,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
 class TrailViewModel(private val repository: TrailRepository) : ViewModel() {
+    //database operations
     val allTrails : LiveData<List<Trail>> = repository.allTrails.asLiveData()
     fun getTrail(id: Int): LiveData<Trail> {
         return repository.getTrail(id).asLiveData()
@@ -21,9 +22,9 @@ class TrailViewModel(private val repository: TrailRepository) : ViewModel() {
     fun getTrailsByType(category: String): LiveData<List<Trail>> {
         return repository.getTrailsByType(category).asLiveData()
     }
-
+    //timer
     var startTime: Long = 0
-    val timer : MutableLiveData<Long> by lazy { MutableLiveData<Long>() }
+    val timer : MutableLiveData<Long> by lazy { MutableLiveData<Long>(0) }
     val isTimerRunning: MutableLiveData<Boolean> by lazy {MutableLiveData<Boolean>(false)}
 }
 
