@@ -15,16 +15,16 @@ import kotlinx.coroutines.launch
 
 class TrailViewModel(private val repository: TrailRepository) : ViewModel() {
     val allTrails : LiveData<List<Trail>> = repository.allTrails.asLiveData()
-    val timer : MutableLiveData<Long> by lazy { MutableLiveData<Long>() }
-    val isTimerRunning: MutableLiveData<Boolean> by lazy {MutableLiveData<Boolean>(false)}
-    var startTime: Long = 0
     fun getTrail(id: Int): LiveData<Trail> {
         return repository.getTrail(id).asLiveData()
     }
-
     fun getTrailsByType(category: String): LiveData<List<Trail>> {
         return repository.getTrailsByType(category).asLiveData()
     }
+
+    var startTime: Long = 0
+    val timer : MutableLiveData<Long> by lazy { MutableLiveData<Long>() }
+    val isTimerRunning: MutableLiveData<Boolean> by lazy {MutableLiveData<Boolean>(false)}
 }
 
 class TrailViewModelFactory(private val repository: TrailRepository) : ViewModelProvider.Factory {
