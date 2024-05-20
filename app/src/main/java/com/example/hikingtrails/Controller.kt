@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.content.ContentResolver
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.Column
@@ -13,11 +14,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -32,6 +35,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -97,6 +101,10 @@ fun TrailApp(
     trailViewModel: TrailViewModel
 ) {
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val currentRoute = navController
+        .currentBackStackEntryFlow
+        .collectAsState(initial = navController.currentBackStackEntry)
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
@@ -157,10 +165,18 @@ fun TrailApp(
         Scaffold(
             topBar = {
                 TrailAppBar(
-                    //currentScreen = currentScreen,
                     canNavigateBack = navController.previousBackStackEntry != null,
                     drawerState = drawerState
                 )
+            },
+            floatingActionButton = {
+                when {
+                    Regex("TrailDetails").containsMatchIn(currentRoute.value?.destination?.route.toString()) -> {
+                        FloatingActionButton(onClick = { Toast.makeText(context, "Zrobiono zdjęcie", Toast.LENGTH_SHORT).show()}) {
+                            Icon(Icons.Filled.AccountCircle, "FAB")
+                        }
+                    }
+                }
             }
         ) { innerPadding ->
             //val uiState by viewModel.uiState.collectAsState()
