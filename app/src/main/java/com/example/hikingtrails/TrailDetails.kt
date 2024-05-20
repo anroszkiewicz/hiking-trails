@@ -3,6 +3,10 @@ package com.example.hikingtrails
 import android.annotation.SuppressLint
 import android.os.SystemClock
 import android.util.Log
+import android.content.ContentResolver
+import android.content.res.Resources
+import android.net.Uri
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,12 +21,15 @@ import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
-
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
@@ -48,11 +55,27 @@ fun TrailDetails(
     }
 }
 
+@SuppressLint("Recycle")
 @Composable
 fun DetailCard(trail: Trail, timer: State<Long?>, isTimerRunning: State<Boolean?>, viewModel: TrailViewModel) {
     Column (modifier = Modifier
         .padding(20.dp)
         .fillMaxWidth()) {
+
+        val imageID: Int = LocalContext.current.resources.getIdentifier("image" + trail.id.toString(), "drawable", "com.example.hikingtrails")
+        val context = LocalContext.current
+        val drawableId = remember(imageID) {
+            context.resources.getIdentifier(
+                "image" + trail.id.toString(),
+                "drawable",
+                context.packageName
+            )
+        }
+        Image(
+            painterResource(id = imageID),
+            contentDescription = null
+        )
+
         Text(trail.name, modifier = Modifier.padding(10.dp), fontWeight = FontWeight.Bold)
         Text(trail.type, modifier = Modifier.padding(10.dp))
         trail.description?.let { Text(it, textAlign = TextAlign.Justify) }

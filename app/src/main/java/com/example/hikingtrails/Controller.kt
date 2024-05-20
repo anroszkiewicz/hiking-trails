@@ -2,6 +2,7 @@ package com.example.hikingtrails
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.content.ContentResolver
 import android.util.Log
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -50,7 +51,6 @@ import androidx.compose.runtime.livedata.observeAsState
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TrailAppBar(
-    //currentScreen: CupcakeScreen,
     canNavigateBack: Boolean,
     drawerState: DrawerState,
     modifier: Modifier = Modifier
@@ -220,8 +220,6 @@ fun TrailApp(
                             navController = navController,
                             index = it,
                             viewModel = trailViewModel
-                            //trailDao = trailDao
-                            //trails = trails
                         )
                     }
                 }
