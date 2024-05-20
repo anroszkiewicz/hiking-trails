@@ -49,15 +49,16 @@ fun TrailDetails(
             }
         }
         val timer = viewModel.timer.observeAsState()
+        val walkingSpeed = viewModel.walkingSpeed.observeAsState()
         if (trail != null) {
-            DetailCard(trail, timer, isTimerRunning, viewModel)
+            DetailCard(trail, timer, isTimerRunning, viewModel, walkingSpeed)
         }
     }
 }
 
 @SuppressLint("Recycle")
 @Composable
-fun DetailCard(trail: Trail, timer: State<Long?>, isTimerRunning: State<Boolean?>, viewModel: TrailViewModel) {
+fun DetailCard(trail: Trail, timer: State<Long?>, isTimerRunning: State<Boolean?>, viewModel: TrailViewModel, walkingSpeed: State<Int?>) {
     Column (modifier = Modifier
         .padding(20.dp)
         .fillMaxWidth()) {
@@ -82,7 +83,20 @@ fun DetailCard(trail: Trail, timer: State<Long?>, isTimerRunning: State<Boolean?
         Text("Etapy:", modifier = Modifier.padding(10.dp))
         trail.stages?.let { Text(it, modifier = Modifier.padding(10.dp))}
         Text("Trudność: " + trail.difficulty.toString() + "/5", modifier = Modifier.padding(10.dp))
-        Text("Czas: " + trail.time.toString() + " minut", modifier = Modifier.padding(10.dp))
+        val time = when (walkingSpeed.value) {
+            0 -> trail.time * 1.3f
+            1 -> trail.time
+            2 -> trail.time * 0.75
+            else -> trail.time
+        }
+        Text("Czas: $time minut", modifier = Modifier.padding(10.dp))
+        Button(onClick = { toggleWalkingSpeed(viewModel) }) {
+            when (walkingSpeed.value) {
+                0 -> Text("Wolno")
+                1 -> Text("Średnio")
+                2 -> Text("Szybko")
+            }
+        }
         Text("Upłynęło: ${timer.value?.milliseconds}", modifier = Modifier.padding(10.dp))
         Button(onClick = { toggleTimer(viewModel) }) {
             if (isTimerRunning.value == true) Text("Stop")
@@ -92,6 +106,10 @@ fun DetailCard(trail: Trail, timer: State<Long?>, isTimerRunning: State<Boolean?
             Text("Reset")
         }
     }
+}
+
+fun toggleWalkingSpeed(viewModel: TrailViewModel) {
+    viewModel.walkingSpeed.value = viewModel.walkingSpeed.value?.plus(1)?.rem(3)
 }
 
 fun toggleTimer(viewModel: TrailViewModel) {

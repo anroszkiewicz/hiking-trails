@@ -24,8 +24,9 @@ class TrailViewModel(private val repository: TrailRepository) : ViewModel() {
     }
     //timer
     var startTime: Long = 0
-    val timer : MutableLiveData<Long> by lazy { MutableLiveData<Long>(0) }
+    val timer: MutableLiveData<Long> by lazy { MutableLiveData<Long>(0) }
     val isTimerRunning: MutableLiveData<Boolean> by lazy {MutableLiveData<Boolean>(false)}
+    val walkingSpeed: MutableLiveData<Int> by lazy {MutableLiveData<Int>(1)}
 }
 
 class TrailViewModelFactory(private val repository: TrailRepository) : ViewModelProvider.Factory {
